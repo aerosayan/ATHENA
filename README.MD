@@ -14,6 +14,6 @@ Created for the upcoming highly anticipated Machine Learning series by me called
 #### License : DEFAULT forever, will make it GPL v2
 #### SAMPLE RESULT :
 
-![first-try](images/01-first-successfull-test.JPG)
+![euler-1](images/02-eulers-identity.png)
 
 ## And more to come...

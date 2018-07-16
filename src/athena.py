@@ -34,12 +34,15 @@ class Page:
         self.lines = [] # Lines to be rendered in 2D matrix form
         self.allignment = [] # Allignment of the lines in 2D matrix form
 
-    def __draw_call(self,toFile=False):
+    def __draw_call(self,dpi,bgcolor='black',tofile=False):
         """ The final draw call that will render the page
         @param toFile : if true then print to file else render on screen
         """
-        plt.draw()
-        plt.show()
+        if tofile :
+            plt.savefig("testfig.png",facecolor=bgcolor,dpi=dpi)
+        else:
+            plt.draw()
+            plt.show()
 
     def __update_ypos(self,returnCount = 1,dy=None):
         """ Update the y positon of the renderer
@@ -53,7 +56,7 @@ class Page:
 
         self.ypos_curr += dy*float(returnCount)
 
-    def render_page(self,toFile=False):
+    def render_page(self,athena,tofile=False):
         """ Render the full page
         @param toFile : if true then print to file else render on screen
         """
@@ -63,30 +66,31 @@ class Page:
             print("ERR : No. of lines and allignment mismatch...")
             assert(False)
         # Create renderer
-        fig = plt.figure(facecolor='black')
+        fig = plt.figure(facecolor=athena.bg_color ,\
+        figsize=[athena.length/athena.dpi, athena.width/athena.dpi],\
+        dpi = athena.dpi)
         # Set the color parameters TODO : make it controllable
-        plt.rcParams['figure.facecolor'] = 'black'
-        plt.rcParams['axes.facecolor'] = 'black'
-        plt.rcParams['text.color'] = 'white'
+        plt.rcParams['figure.figsize'] =[athena.length/athena.dpi, athena.width/athena.dpi]
+        plt.rcParams['figure.facecolor'] = athena.bg_color
+        plt.rcParams['axes.facecolor'] = athena.bg_color
+        plt.rcParams['text.color'] = athena.font_color
         # Clear figure
         plt.gcf()
         for i in xrange(len(self.lines)):
             # Render line
-            self.render_line(i)
+            self.render_line(i,athena.font_size)
             # Update rendering position
             self.__update_ypos()
-
-        self.__draw_call(toFile)
-
-
+        # Call final draw call for this page
+        self.__draw_call(athena.dpi,athena.bg_color,tofile)
 
 
-
-    def render_line(self,line_num):
-        """ Render one line
+    def render_line(self,line_num,fontsize):
+        """ Render one line after aligning it correctly and sizing it correctly
         @param line_num : the position of the line in self.lines to be printed
         """
-        plt.text(self.xpos_curr,self.ypos_curr,self.lines[line_num],fontsize=30,ha='center',va='center')
+        plt.text(self.xpos_curr,self.ypos_curr,self.lines[line_num],\
+        fontsize=fontsize,ha=self.allignment[line_num])
 
     def add_line(self,line,allign='left'):
         """ Add another string of text to the page
@@ -99,20 +103,25 @@ class Page:
 
 class Athena:
     """ The base class for creating educational video frames in LaTex format """
-    def __init__(self,length,width,bg_color='black',font_color='white'):
+    def __init__(self,length,width,dpi,bgcolor='black',fontcolor='white'):
         """ Constructor
         @param length : the length in pixels of the image to be rendered
         @param width : the width in pixels of the image to be rendered
+        @param dpi : dots per inch
         @param bg_color : default= 'black' : the background color
         @param font_color : default= 'white' : the font color
         """
         #------------------------------------------------------
         # Parameters set by the user
         #------------------------------------------------------
+        # Length ,width and dpi of the rendered image
         self.length = length
         self.width = width
-        self.bg_color = bg_color
-        self.font_color = font_color
+        self.dpi = dpi
+        # Background color,font color and font size to use in the rendering
+        self.bg_color = bgcolor
+        self.font_color = fontcolor
+        self.font_size = 30
         #------------------------------------------------------
         # Parameters set by default
         #------------------------------------------------------
@@ -122,21 +131,21 @@ class Athena:
         #------------------------------------------------------
         self.pages = [] # NOTE : self.text will be an array of object of Page
 
-    def create_page(self,lines_alligned):
+    def create_page(self,data):
         """ Create page and add to Athena
-        @param lines_alligned : get both the line and the allignment data
-        @info  lines_alligned = [["hello"],["world","left"]]
+        @param data : get both the line and the allignment data
+        @info  data = [["hello"],["world","left"]]
         """
         # Create the page object
         page = Page()
         # Iterate through every line given
-        for i in xrange(len(lines_alligned)):
-            if len(lines_alligned[i]) == 1 :
+        for i in xrange(len(data)):
+            if len(data[i]) == 1 :
                 # If only a single line is given then use the default allignment
-                page.add_line(lines_alligned[i][0])
-            elif len(lines_alligned[i]) == 2:
+                page.add_line(data[i][0])
+            elif len(data[i]) == 2:
                 # We have both line data and allignment data
-                page.add_line(lines_alligned[i][0],allign=lines_alligned[i][1])
+                page.add_line(data[i][0],allign=data[i][1])
             else:
                 print("ERR : lines_alligned size error...")
                 assert(False)
@@ -155,11 +164,11 @@ class Athena:
         @param pages : an object or array of objects of the page class
         """
         self.pages.append(pages)
-    def render_page_at(self,n):
+    def render_page_at(self,n,tofile=False):
         """ Render page at position given position
         @param n : the position of the page to be rendered
         """
-        self.pages[n].render_page()
+        self.pages[n].render_page(self,tofile=tofile)
 
     def render(self,toFile=False):
         """ Render every page to either screen or file
