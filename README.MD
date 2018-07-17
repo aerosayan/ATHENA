@@ -1,5 +1,5 @@
 # ATHENA
-<i>Named after the greek godess of wisdom.</i>
+<i>Named after the Greek Goddess of wisdom.</i>
 </br>
 Designed to allow rendering mathematical tutorial
 video frames.</br>
@@ -10,10 +10,12 @@ Created for the upcoming highly anticipated Machine Learning series by me called
 
 ## Author   : Sayan Bhattacharjee
 ## Email    : aero.sayan@gmail.com
-## LinkedIn : www.linkedin.com/in/aerosayan/
-#### License : DEFAULT forever, will make it GPL v2
-#### SAMPLE RESULT :
+## LinkedIn : www.linkedin.com/in/aerosayan
+#### License : DEFAULT for now, will make it GPL v3 soon
 
+#### SAMPLE RESULTS :
+Fig 1 : Euler's identity to show LaTex rendering
 ![euler-1](images/02-eulers-identity.png)
-
+Fig 2 : Navier's stokes equation to show color rendering and font size
+![ns-1](images/03-navier-stokes-colored.png)
 ## And more to come...
