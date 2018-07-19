@@ -18,4 +18,6 @@ Fig 1 : Euler's identity to show LaTex rendering
 ![euler-1](images/02-eulers-identity.png)
 Fig 2 : Navier's stokes equation to show color rendering and font size
 ![ns-1](images/03-navier-stokes-colored.png)
+Fig 3 : ATHENA is ready for full production use
+![athena-ready-1](images/05-athena-is-ready.png)
 ## And more to come...
